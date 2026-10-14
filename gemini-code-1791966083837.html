@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bản Đồ & Di Tích Lịch Sử TP.HCM</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        heritage: {
+                            red: '#9B2C2C',
+                            gold: '#D69E2E',
+                            dark: '#1A202C',
+                            cream: '#FFFBF0'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Merriweather', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .map-box { height: 100%; width: 100%; }
+        .sub-map-box { height: 280px; width: 100%; }
+    </style>
+</head>
+<body class="bg-heritage-cream font-sans text-heritage-dark min-h-screen flex flex-col">
+
+    <!-- Header Navigation -->
+    <header class="bg-heritage-red text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-3">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchView('home')">
+                <i class="fa-solid fa-landmark text-2xl text-heritage-gold"></i>
+                <span class="font-serif text-lg md:text-xl font-bold tracking-wide">Di Tích Lịch Sử TP.HCM</span>
+            </div>
+            <nav class="flex flex-wrap gap-2 text-xs md:text-sm font-medium">
+                <button onclick="switchView('home')" class="nav-btn px-3 py-1.5 rounded-lg bg-heritage-gold text-heritage-dark font-bold transition shadow" data-target="home"><i class="fa-solid fa-map mr-1"></i> Bản Đồ Số</button>
+                <button onclick="switchView('dinh-doc-lap')" class="nav-btn px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition" data-target="dinh-doc-lap">Dinh Độc Lập</button>
+                <button onclick="switchView('nha-tho-duc-ba')" class="nav-btn px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition" data-target="nha-tho-duc-ba">Nhà Thờ Đức Bà</button>
+                <button onclick="switchView('cho-ben-thanh')" class="nav-btn px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition" data-target="cho-ben-thanh">Chợ Bến Thành</button>
+                <button onclick="switchView('ben-nha-rong')" class="nav-btn px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition" data-target="ben-nha-rong">Bến Nhà Rồng</button>
+                <button onclick="switchView('dia-dao-cu-chi')" class="nav-btn px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition" data-target="dia-dao-cu-chi">Địa Đạo Củ Chi</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- VIEWS CONTAINER -->
+    <main class="flex-1 flex flex-col relative">
+
+        <!-- VIEW 1: HOME (MAP DASHBOARD) -->
+        <div id="view-home" class="view-section flex-1 flex flex-col md:flex-row h-[calc(100vh-65px)] overflow-hidden">
+            <!-- Sidebar -->
+            <aside class="w-full md:w-96 bg-white shadow-xl z-10 flex flex-col h-1/2 md:h-full border-r border-gray-200">
+                <div class="p-4 border-b border-gray-100 bg-gray-50">
+                    <h2 class="font-serif font-bold text-gray-800 mb-2">Danh Sách Di Tích</h2>
+                    <p class="text-xs text-gray-500 mb-3">Nhấp vào địa điểm để xem trên bản đồ hoặc mở trang chi tiết.</p>
+                </div>
+                <div class="flex-1 overflow-y-auto divide-y divide-gray-100 p-2 space-y-2">
+                    <div onclick="switchView('dinh-doc-lap')" class="p-3 hover:bg-amber-50 cursor-pointer rounded-xl transition flex items-center space-x-3 group bg-white shadow-sm border border-gray-100">
+                        <img src="https://images.unsplash.com/photo-1583417319070-4a69db38a482?auto=format&fit=crop&w=200&q=80" class="w-14 h-14 object-cover rounded-lg">
+                        <div class="flex-1 min-w-0">
+                            <h4 class="font-serif font-bold text-sm text-gray-900 group-hover:text-heritage-red">Dinh Độc Lập</h4>
+                            <p class="text-xs text-gray-500 truncate">135 Nam Kỳ Khởi Nghĩa, Quận 1</p>
+                            <span class="text-[10px] text-heritage-red font-semibold bg-red-50 px-2 py-0.5 rounded">Xem trang chi tiết &rarr;</span>
+                        </div>
+                    </div>
+                    <div onclick="switchView('nha-tho-duc-ba')" class="p-3 hover:bg-amber-50 cursor-pointer rounded-xl transition flex items-center space-x-3 group bg-white shadow-sm border border-gray-100">
+                        <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=200&q=80" class="w-14 h-14 object-cover rounded-lg">
+                        <div class="flex-1 min-w-0">
+                            <h4 class="font-serif font-bold text-sm text-gray-900 group-hover:text-heritage-red">Nhà Thờ Đức Bà</h4>
+                            <p class="text-xs text-gray-500 truncate">Công xã Paris, Quận 1</p>
+                            <span class="text-[10px] text-heritage-red font-semibold bg-red-50 px-2 py-0.5 rounded">Xem trang chi tiết &rarr;</span>
+                        </div>
+                    </div>
+                    <div onclick="switchView('cho-ben-thanh')" class="p-3 hover:bg-amber-50 cursor-pointer rounded-xl transition flex items-center space-x-3 group bg-white shadow-sm border border-gray-100">
+                        <img src="https://images.unsplash.com/photo-1509557965875-b88c97052f0e?auto=format&fit=crop&w=200&q=80" class="w-14 h-14 object-cover rounded-lg">
+                        <div class="flex-1 min-w-0">
+                            <h4 class="font-serif font-bold text-sm text-gray-900 group-hover:text-heritage-red">Chợ Bến Thành</h4>
+                            <p class="text-xs text-gray-500 truncate">Lê Thánh Tôn, Quận 1</p>
+                            <span class="text-[10px] text-heritage-red font-semibold bg-red-50 px-2 py-0.5 rounded">Xem trang chi tiết &rarr;</span>
+                        </div>
+                    </div>
+                    <div onclick="switchView('ben-nha-rong')" class="p-3 hover:bg-amber-50 cursor-pointer rounded-xl transition flex items-center space-x-3 group bg-white shadow-sm border border-gray-100">
+                        <img src="https://images.unsplash.com/photo-1596422846543-75c6fc197f07?auto=format&fit=crop&w=200&q=80" class="w-14 h-14 object-cover rounded-lg">
+                        <div class="flex-1 min-w-0">
+                            <h4 class="font-serif font-bold text-sm text-gray-900 group-hover:text-heritage-red">Bến Nhà Rồng</h4>
+                            <p class="text-xs text-gray-500 truncate">01 Nguyễn Tất Thành, Quận 4</p>
+                            <span class="text-[10px] text-heritage-red font-semibold bg-red-50 px-2 py-0.5 rounded">Xem trang chi tiết &rarr;</span>
+                        </div>
+                    </div>
+                    <div onclick="switchView('dia-dao-cu-chi')" class="p-3 hover:bg-amber-50 cursor-pointer rounded-xl transition flex items-center space-x-3 group bg-white shadow-sm border border-gray-100">
+                        <img src="https://images.unsplash.com/photo-1528164344705-475426879c0d?auto=format&fit=crop&w=200&q=80" class="w-14 h-14 object-cover rounded-lg">
+                        <div class="flex-1 min-w-0">
+                            <h4 class="font-serif font-bold text-sm text-gray-900 group-hover:text-heritage-red">Địa Đạo Củ Chi</h4>
+                            <p class="text-xs text-gray-500 truncate">Huyện Củ Chi, TP.HCM</p>
+                            <span class="text-[10px] text-heritage-red font-semibold bg-red-50 px-2 py-0.5 rounded">Xem trang chi tiết &rarr;</span>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+            <!-- Map Area -->
+            <div class="flex-1 h-1/2 md:h-full relative">
+                <div id="mainMap" class="map-box"></div>
+            </div>
+        </div>
+
+        <!-- TEMPLATE FUNCTION FOR DETAILED PAGES -->
+        <!-- VIEW: DINH ĐỘC LẬP -->
+        <div id="view-dinh-doc-lap" class="view-section hidden flex-1 overflow-y-auto p-4 md:p-8">
+            <div class="max-w-5xl mx-auto space-y-6">
+                <div class="relative h-72 md:h-96 rounded-2xl overflow-hidden shadow-lg">
+                    <img src="https://images.unsplash.com/photo-1583417319070-4a69db38a482?auto=format&fit=crop&w=1200&q=80" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent flex items-end p-6">
+                        <div>
+                            <span class="px-3 py-1 bg-heritage-red text-white text-xs font-semibold rounded-full uppercase">Di tích Quốc gia Đặc biệt</span>
+                            <h1 class="font-serif text-3xl md:text-4xl font-bold text-white mt-2">Dinh Độc Lập (Hội Trường Thống Nhất)</h1>
+                            <p class="text-gray-200 text-sm"><i class="fa-solid fa-location-dot text-heritage-gold mr-2"></i>135 Nam Kỳ Khởi Nghĩa, Quận 1</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Audio Bar -->
+                <div class="bg-heritage-red text-white p-5 rounded-xl shadow flex flex-wrap items-center justify-between gap-4">
+                    <div class="flex items-center space-x-3">
+                        <i class="fa-solid fa-headphones text-2xl text-heritage-gold"></i>
+                        <div><h4 class="font-bold">Thuyết Minh Audio</h4><p class="text-xs text-red-200">Nghe hướng dẫn viên ảo giới thiệu</p></div>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button onclick="speakText('Dinh Độc Lập là di tích lịch sử quốc gia đặc biệt, chứng nhân lịch sử ngày 30 tháng 4 năm 1975.')" class="px-4 py-2 bg-heritage-gold text-heritage-dark font-bold rounded-lg text-sm hover:bg-yellow-400 transition"><i class="fa-solid fa-play mr-1"></i> Phát</button>
+                        <button onclick="stopSpeech()" class="px-4 py-2 bg-white/20 rounded-lg text-sm hover:bg-white/30 transition"><i class="fa-solid fa-stop mr-1"></i> Dừng</button>
+                    </div>
+                </div>
+                <!-- Content & Map grid -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="md:col-span-2 bg-white p-6 rounded-xl shadow-sm space-y-4">
+                        <h3 class="font-serif font-bold text-xl text-heritage-red border-b pb-2">Giới Thiệu Lịch Sử</h3>
+                        <p class="text-gray-700 leading-relaxed">Dinh Độc Lập là công trình kiến trúc nổi tiếng do kiến trúc sư Ngô Viết Thụ thiết kế. Đây là nơi ở và làm việc của Tổng thống Việt Nam Cộng hòa trước đây, đồng thời là biểu tượng của hòa bình và thống nhất đất nước ngày 30/4/1975.</p>
+                        <h4 class="font-bold text-gray-800">Video Tư Liệu:</h4>
+                        <div class="aspect-w-16 aspect-h-9 h-64 bg-black rounded-lg overflow-hidden">
+                            <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" class="w-full h-full" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="bg-white p-4 rounded-xl shadow-sm space-y-3">
+                            <h4 class="font-bold text-gray-800 text-sm"><i class="fa-solid fa-map-location-dot text-heritage-red mr-1"></i> Vị Trí Bản Đồ</h4>
+                            <div id="map-dinh-doc-lap" class="sub-map-box rounded-lg border"></div>
+                            <a href="https://www.google.com/maps/search/?api=1&query=10.7769,106.6953" target="_blank" class="block text-center py-2 bg-red-800 text-white text-xs font-bold rounded-lg hover:bg-red-900 transition">Mở Google Maps</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW: NHÀ THỜ ĐỨC BÀ -->
+        <div id="view-nha-tho-duc-ba" class="view-section hidden flex-1 overflow-y-auto p-4 md:p-8">
+            <div class="max-w-5xl mx-auto space-y-6">
+                <div class="relative h-72 md:h-96 rounded-2xl overflow-hidden shadow-lg">
+                    <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent flex items-end p-6">
+                        <div>
+                            <span class="px-3 py-1 bg-heritage-red text-white text-xs font-semibold rounded-full uppercase">Di tích Kiến trúc Tôn giáo</span>
+                            <h1 class="font-serif text-3xl md:text-4xl font-bold text-white mt-2">Nhà Thờ Đức Bà Sài Gòn</h1>
+                            <p class="text-gray-200 text-sm"><i class="fa-solid fa-location-dot text-heritage-gold mr-2"></i>Công xã Paris, Quận 1</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-heritage-red text-white p-5 rounded-xl shadow flex flex-wrap items-center justify-between gap-4">
+                    <div class="flex items-center space-x-3">
+                        <i class="fa-solid fa-headphones text-2xl text-heritage-gold"></i>
+                        <div><h4 class="font-bold">Thuyết Minh Audio</h4><p class="text-xs text-red-200">Nghe hướng dẫn viên ảo giới thiệu</p></div>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button onclick="speakText('Nhà thờ Đức Bà Sài Gòn mang phong cách kiến trúc Roman kết hợp Gothic, xây dựng từ năm 1880 với vật liệu gạch đỏ từ Pháp.')" class="px-4 py-2 bg-heritage-gold text-heritage-dark font-bold rounded-lg text-sm hover:bg-yellow-400 transition"><i class="fa-solid fa-play mr-1"></i> Phát</button>
+                        <button onclick="stopSpeech()" class="px-4 py-2 bg-white/20 rounded-lg text-sm hover:bg-white/30 transition"><i class="fa-solid fa-stop mr-1"></i> Dừng</button>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="md:col-span-2 bg-white p-6 rounded-xl shadow-sm space-y-4">
+                        <h3 class="font-serif font-bold text-xl text-heritage-red border-b pb-2">Giới Thiệu Lịch Sử</h3>
+                        <p class="text-gray-700 leading-relaxed">Nhà thờ Chính tòa Đức Bà Sài Gòn do kiến trúc sư J. Bourard thiết kế. Điểm độc đáo là toàn bộ gạch đỏ xây tường được chuyển trực tiếp từ Marseille (Pháp) sang mà không tô trát vữa, giữ nguyên màu sắc trường tồn theo thời gian.</p>
+                        <h4 class="font-bold text-gray-800">Video Tư Liệu:</h4>
+                        <div class="aspect-w-16 aspect-h-9 h-64 bg-black rounded-lg overflow-hidden">
+                            <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" class="w-full h-full" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="bg-white p-4 rounded-xl shadow-sm space-y-3">
+                            <h4 class="font-bold text-gray-800 text-sm"><i class="fa-solid fa-map-location-dot text-heritage-red mr-1"></i> Vị Trí Bản Đồ</h4>
+                            <div id="map-nha-tho-duc-ba" class="sub-map-box rounded-lg border"></div>
+                            <a href="https://www.google.com/maps/search/?api=1&query=10.7798,106.6990" target="_blank" class="block text-center py-2 bg-red-800 text-white text-xs font-bold rounded-lg hover:bg-red-900 transition">Mở Google Maps</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW: CHỢ BẾN THÀNH -->
+        <div id="view-cho-ben-thanh" class="view-section hidden flex-1 overflow-y-auto p-4 md:p-8">
+            <div class="max-w-5xl mx-auto space-y-6">
+                <div class="relative h-72 md:h-96 rounded-2xl overflow-hidden shadow-lg">
+                    <img src="https://images.unsplash.com/photo-1509557965875-b88c97052f0e?auto=format&fit=crop&w=1200&q=80" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent flex items-end p-6">
+                        <div>
+                            <span class="px-3 py-1 bg-heritage-red text-white text-xs font-semibold rounded-full uppercase">Biểu tượng Văn hóa Thương mại</span>
+                            <h1 class="font-serif text-3xl md:text-4xl font-bold text-white mt-2">Chợ Bến Thành</h1>
+                            <p class="text-gray-200 text-sm"><i class="fa-solid fa-location-dot text-heritage-gold mr-2"></i>Lê Thánh Tôn, Quận 1</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-heritage-red text-white p-5 rounded-xl shadow flex flex-wrap items-center justify-between gap-4">
+                    <div class="flex items-center space-x-3">
+                        <i class="fa-solid fa-headphones text-2xl text-heritage-gold"></i>
+                        <div><h4 class="font-bold">Thuyết Minh Audio</h4><p class="text-xs text-red-200">Nghe hướng dẫn viên ảo giới thiệu</p></div>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button onclick="speakText('Chợ Bến Thành là trung tâm giao thương sầm uất và là biểu tượng kiến trúc lâu đời của thành phố với tháp đồng hồ ba mặt đặc trưng.')" class="px-4 py-2 bg-heritage-gold text-heritage-dark font-bold rounded-lg text-sm hover:bg-yellow-400 transition"><i class="fa-solid fa-play mr-1"></i> Phát</button>
+                        <button onclick="stopSpeech()" class="px-4 py-2 bg-white/20 rounded-lg text-sm hover:bg-white/30 transition"><i class="fa-solid fa-stop mr-1"></i> Dừng</button>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="md:col-span-2 bg-white p-6 rounded-xl shadow-sm space-y-4">
+                        <h3 class="font-serif font-bold text-xl text-heritage-red border-b pb-2">Giới Thiệu Lịch Sử</h3>
+                        <p class="text-gray-700 leading-relaxed">Được xây dựng từ năm 1912 và khánh thành năm 1914, Chợ Bến Thành nổi tiếng với hình ảnh tháp đồng hồ 3 mặt ở cửa Nam. Đây là nơi mua sắm, giao lưu văn hóa quen thuộc của người dân Sài Gòn và du khách quốc tế.</p>
+                        <h4 class="font-bold text-gray-800">Video Tư Liệu:</h4>
+                        <div class="aspect-w-16 aspect-h-9 h-64 bg-black rounded-lg overflow-hidden">
+                            <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" class="w-full h-full" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="bg-white p-4 rounded-xl shadow-sm space-y-3">
+                            <h4 class="font-bold text-gray-800 text-sm"><i class="fa-solid fa-map-location-dot text-heritage-red mr-1"></i> Vị Trí Bản Đồ</h4>
+                            <div id="map-cho-ben-thanh" class="sub-map-box rounded-lg border"></div>
+                            <a href="https://www.google.com/maps/search/?api=1&query=10.7725,106.6980" target="_blank" class="block text-center py-2 bg-red-800 text-white text-xs font-bold rounded-lg hover:bg-red-900 transition">Mở Google Maps</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW: BẾN NHÀ RỒNG -->
+        <div id="view-ben-nha-rong" class="view-section hidden flex-1 overflow-y-auto p-4 md:p-8">
+            <div class="max-w-5xl mx-auto space-y-6">
+                <div class="relative h-72 md:h-96 rounded-2xl overflow-hidden shadow-lg">
+                    <img src="https://images.unsplash.com/photo-1596422846543-75c6fc197f07?auto=format&fit=crop&w=1200&q=80" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent flex items-end p-6">
+                        <div>
+                            <span class="px-3 py-1 bg-heritage-red text-white text-xs font-semibold rounded-full uppercase">Di tích Cách mạng Quốc gia</span>
+                            <h1 class="font-serif text-3xl md:text-4xl font-bold text-white mt-2">Bến Nhà Rồng (Bảo Tàng Hồ Chí Minh)</h1>
+                            <p class="text-gray-200 text-sm"><i class="fa-solid fa-location-dot text-heritage-gold mr-2"></i>01 Nguyễn Tất Thành, Quận 4</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-heritage-red text-white p-5 rounded-xl shadow flex flex-wrap items-center justify-between gap-4">
+                    <div class="flex items-center space-x-3">
+                        <i class="fa-solid fa-headphones text-2xl text-heritage-gold"></i>
+                        <div><h4 class="font-bold">Thuyết Minh Audio</h4><p class="text-xs text-red-200">Nghe hướng dẫn viên ảo giới thiệu</p></div>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button onclick="speakText('Bến Nhà Rồng là nơi ngày 5 tháng 6 năm 1911, người thanh niên Nguyễn Tất Thành đã lên tàu ra đi tìm đường cứu nước cho dân tộc Việt Nam.')" class="px-4 py-2 bg-heritage-gold text-heritage-dark font-bold rounded-lg text-sm hover:bg-yellow-400 transition"><i class="fa-solid fa-play mr-1"></i> Phát</button>
+                        <button onclick="stopSpeech()" class="px-4 py-2 bg-white/20 rounded-lg text-sm hover:bg-white/30 transition"><i class="fa-solid fa-stop mr-1"></i> Dừng</button>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="md:col-span-2 bg-white p-6 rounded-xl shadow-sm space-y-4">
+                        <h3 class="font-serif font-bold text-xl text-heritage-red border-b pb-2">Giới Thiệu Lịch Sử</h3>
+                        <p class="text-gray-700 leading-relaxed">Nơi đây vào ngày 5/6/1911, Chủ tịch Hồ Chí Minh (khi ấy là thanh niên Nguyễn Tất Thành) đã xuống con tàu Amiral Latouche-Tréville khởi hành cuộc hành trình vĩ đại tìm đường cứu nước cho dân tộc.</p>
+                        <h4 class="font-bold text-gray-800">Video Tư Liệu:</h4>
+                        <div class="aspect-w-16 aspect-h-9 h-64 bg-black rounded-lg overflow-hidden">
+                            <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" class="w-full h-full" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="bg-white p-4 rounded-xl shadow-sm space-y-3">
+                            <h4 class="font-bold text-gray-800 text-sm"><i class="fa-solid fa-map-location-dot text-heritage-red mr-1"></i> Vị Trí Bản Đồ</h4>
+                            <div id="map-ben-nha-rong" class="sub-map-box rounded-lg border"></div>
+                            <a href="https://www.google.com/maps/search/?api=1&query=10.7675,106.7061" target="_blank" class="block text-center py-2 bg-red-800 text-white text-xs font-bold rounded-lg hover:bg-red-900 transition">Mở Google Maps</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW: ĐỊA ĐẠO CỦ CHI -->
+        <div id="view-dia-dao-cu-chi" class="view-section hidden flex-1 overflow-y-auto p-4 md:p-8">
+            <div class="max-w-5xl mx-auto space-y-6">
+                <div class="relative h-72 md:h-96 rounded-2xl overflow-hidden shadow-lg">
+                    <img src="https://images.unsplash.com/photo-1528164344705-475426879c0d?auto=format&fit=crop&w=1200&q=80" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent flex items-end p-6">
+                        <div>
+                            <span class="px-3 py-1 bg-heritage-red text-white text-xs font-semibold rounded-full uppercase">Di tích Quốc gia Đặc biệt</span>
+                            <h1 class="font-serif text-3xl md:text-4xl font-bold text-white mt-2">Địa Đạo Củ Chi</h1>
+                            <p class="text-gray-200 text-sm"><i class="fa-solid fa-location-dot text-heritage-gold mr-2"></i>Huyện Củ Chi, TP.HCM</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-heritage-red text-white p-5 rounded-xl shadow flex flex-wrap items-center justify-between gap-4">
+                    <div class="flex items-center space-x-3">
+                        <i class="fa-solid fa-headphones text-2xl text-heritage-gold"></i>
+                        <div><h4 class="font-bold">Thuyết Minh Audio</h4><p class="text-xs text-red-200">Nghe hướng dẫn viên ảo giới thiệu</p></div>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button onclick="speakText('Địa đạo Củ Chi là hệ thống phòng thủ độc đáo trong lòng đất dài hơn 250 ki-lô-mét, minh chứng cho ý chí kiên cường của quân dân Củ Chi.')" class="px-4 py-2 bg-heritage-gold text-heritage-dark font-bold rounded-lg text-sm hover:bg-yellow-400 transition"><i class="fa-solid fa-play mr-1"></i> Phát</button>
+                        <button onclick="stopSpeech()" class="px-4 py-2 bg-white/20 rounded-lg text-sm hover:bg-white/30 transition"><i class="fa-solid fa-stop mr-1"></i> Dừng</button>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="md:col-span-2 bg-white p-6 rounded-xl shadow-sm space-y-4">
+                        <h3 class="font-serif font-bold text-xl text-heritage-red border-b pb-2">Giới Thiệu Lịch Sử</h3>
+                        <p class="text-gray-700 leading-relaxed">Hệ thống đường hầm ngầm lan rộng hơn 250km bao gồm phòng ở, bệnh xá, kho vũ khí và bếp Hoàng Cầu. Đây là công trình quân sự độc đáo khẳng định ý chí quật cường trong kháng chiến.</p>
+                        <h4 class="font-bold text-gray-800">Video Tư Liệu:</h4>
+                        <div class="aspect-w-16 aspect-h-9 h-64 bg-black rounded-lg overflow-hidden">
+                            <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" class="w-full h-full" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="bg-white p-4 rounded-xl shadow-sm space-y-3">
+                            <h4 class="font-bold text-gray-800 text-sm"><i class="fa-solid fa-map-location-dot text-heritage-red mr-1"></i> Vị Trí Bản Đồ</h4>
+                            <div id="map-dia-dao-cu-chi" class="sub-map-box rounded-lg border"></div>
+                            <a href="https://www.google.com/maps/search/?api=1&query=11.1448,106.4950" target="_blank" class="block text-center py-2 bg-red-800 text-white text-xs font-bold rounded-lg hover:bg-red-900 transition">Mở Google Maps</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        let mainMap = null;
+        let subMaps = {};
+
+        // Switch Views Function
+        function switchView(viewId) {
+            stopSpeech();
+            document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
+            document.getElementById('view-' + viewId).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.className = 'nav-btn px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition text-xs md:text-sm font-medium';
+                if(btn.getAttribute('data-target') === viewId) {
+                    btn.className = 'nav-btn px-3 py-1.5 rounded-lg bg-heritage-gold text-heritage-dark font-bold transition shadow text-xs md:text-sm';
+                }
+            });
+
+            // Initialize maps when views open
+            if(viewId === 'home') {
+                setTimeout(() => {
+                    if(!mainMap) {
+                        mainMap = L.map('mainMap').setView([10.7769, 106.6953], 13);
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mainMap);
+                        
+                        const places = [
+                            {name: "Dinh Độc Lập", lat: 10.7769, lng: 106.6953, id: 'dinh-doc-lap'},
+                            {name: "Nhà Thờ Đức Bà", lat: 10.7798, lng: 106.6990, id: 'nha-tho-duc-ba'},
+                            {name: "Chợ Bến Thành", lat: 10.7725, lng: 106.6980, id: 'cho-ben-thanh'},
+                            {name: "Bến Nhà Rồng", lat: 10.7675, lng: 106.7061, id: 'ben-nha-rong'},
+                            {name: "Địa Đạo Củ Chi", lat: 11.1448, lng: 106.4950, id: 'dia-dao-cu-chi'}
+                        ];
+
+                        places.forEach(p => {
+                            L.marker([p.lat, p.lng]).addTo(mainMap)
+                                .bindPopup(`<b>${p.name}</b><br><button onclick="switchView('${p.id}')" class="mt-1 px-2 py-1 bg-red-700 text-white text-xs rounded">Xem trang chi tiết</button>`);
+                        });
+                    } else {
+                        mainMap.invalidateSize();
+                    }
+                }, 100);
+            } else {
+                // Sub maps setup
+                setTimeout(() => {
+                    const coords = {
+                        'dinh-doc-lap': [10.7769, 106.6953],
+                        'nha-tho-duc-ba': [10.7798, 106.6990],
+                        'cho-ben-thanh': [10.7725, 106.6980],
+                        'ben-nha-rong': [10.7675, 106.7061],
+                        'dia-dao-cu-chi': [11.1448, 106.4950]
+                    };
+                    const containerId = 'map-' + viewId;
+                    if(!subMaps[viewId] && document.getElementById(containerId)) {
+                        const sm = L.map(containerId).setView(coords[viewId], 15);
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(sm);
+                        L.marker(coords[viewId]).addTo(sm);
+                        subMaps[viewId] = sm;
+                    } else if(subMaps[viewId]) {
+                        subMaps[viewId].invalidateSize();
+                    }
+                }, 100);
+            }
+        }
+
+        // Web Speech API
+        let utterance = null;
+        function speakText(text) {
+            window.speechSynthesis.cancel();
+            utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'vi-VN';
+            utterance.rate = 0.9;
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function stopSpeech() {
+            if(window.speechSynthesis.speaking || window.speechSynthesis.paused) {
+                window.speechSynthesis.cancel();
+            }
+        }
+
+        window.onload = () => {
+            switchView('home');
+        };
+    </script>
+</body>
+</html>

@@ -52,7 +52,7 @@
                 <button onclick="switchView('nha-tho-duc-ba')" class="nav-btn px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition" data-target="nha-tho-duc-ba">Nhà Thờ Đức Bà</button>
                 <button onclick="switchView('cho-ben-thanh')" class="nav-btn px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition" data-target="cho-ben-thanh">Chợ Bến Thành</button>
                 <button onclick="switchView('ben-nha-rong')" class="nav-btn px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition" data-target="ben-nha-rong">Bến Nhà Rồng</button>
-                <button onclick="switchView('dia-dao-cu-chi')" class="nav-btn px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition" data-target="dia-dao-cu-chi">Địa Đạo Củ Chi</button>
+                <button onclick="switchView('buu-dien-tp')" class="nav-btn px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition" data-target="buu-dien-tp">Bưu Điện TP.HCM</button>
             </nav>
         </div>
     </header>
@@ -101,11 +101,11 @@
                             <span class="text-[10px] text-heritage-red font-semibold bg-red-50 px-2 py-0.5 rounded">Xem trang chi tiết &rarr;</span>
                         </div>
                     </div>
-                    <div onclick="switchView('dia-dao-cu-chi')" class="p-3 hover:bg-amber-50 cursor-pointer rounded-xl transition flex items-center space-x-3 group bg-white shadow-sm border border-gray-100">
-                        <img src="https://images.unsplash.com/photo-1528164344705-475426879c0d?auto=format&fit=crop&w=200&q=80" class="w-14 h-14 object-cover rounded-lg">
+                    <div onclick="switchView('buu-dien-tp')" class="p-3 hover:bg-amber-50 cursor-pointer rounded-xl transition flex items-center space-x-3 group bg-white shadow-sm border border-gray-100">
+                        <img src="https://images.unsplash.com/photo-1569154941061-e231b4725ef1?auto=format&fit=crop&w=200&q=80" class="w-14 h-14 object-cover rounded-lg">
                         <div class="flex-1 min-w-0">
-                            <h4 class="font-serif font-bold text-sm text-gray-900 group-hover:text-heritage-red">Địa Đạo Củ Chi</h4>
-                            <p class="text-xs text-gray-500 truncate">Huyện Củ Chi, TP.HCM</p>
+                            <h4 class="font-serif font-bold text-sm text-gray-900 group-hover:text-heritage-red">Bưu Điện TP.HCM</h4>
+                            <p class="text-xs text-gray-500 truncate">2 Công xã Paris, Quận 1</p>
                             <span class="text-[10px] text-heritage-red font-semibold bg-red-50 px-2 py-0.5 rounded">Xem trang chi tiết &rarr;</span>
                         </div>
                     </div>
@@ -117,7 +117,6 @@
             </div>
         </div>
 
-        <!-- TEMPLATE FUNCTION FOR DETAILED PAGES -->
         <!-- VIEW: DINH ĐỘC LẬP -->
         <div id="view-dinh-doc-lap" class="view-section hidden flex-1 overflow-y-auto p-4 md:p-8">
             <div class="max-w-5xl mx-auto space-y-6">
@@ -131,7 +130,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- Audio Bar -->
                 <div class="bg-heritage-red text-white p-5 rounded-xl shadow flex flex-wrap items-center justify-between gap-4">
                     <div class="flex items-center space-x-3">
                         <i class="fa-solid fa-headphones text-2xl text-heritage-gold"></i>
@@ -142,7 +140,6 @@
                         <button onclick="stopSpeech()" class="px-4 py-2 bg-white/20 rounded-lg text-sm hover:bg-white/30 transition"><i class="fa-solid fa-stop mr-1"></i> Dừng</button>
                     </div>
                 </div>
-                <!-- Content & Map grid -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div class="md:col-span-2 bg-white p-6 rounded-xl shadow-sm space-y-4">
                         <h3 class="font-serif font-bold text-xl text-heritage-red border-b pb-2">Giới Thiệu Lịch Sử</h3>
@@ -292,16 +289,16 @@
             </div>
         </div>
 
-        <!-- VIEW: ĐỊA ĐẠO CỦ CHI -->
-        <div id="view-dia-dao-cu-chi" class="view-section hidden flex-1 overflow-y-auto p-4 md:p-8">
+        <!-- VIEW: BƯU ĐIỆN TP.HCM (Đã thay thế Củ Chi) -->
+        <div id="view-buu-dien-tp" class="view-section hidden flex-1 overflow-y-auto p-4 md:p-8">
             <div class="max-w-5xl mx-auto space-y-6">
                 <div class="relative h-72 md:h-96 rounded-2xl overflow-hidden shadow-lg">
-                    <img src="https://images.unsplash.com/photo-1528164344705-475426879c0d?auto=format&fit=crop&w=1200&q=80" class="w-full h-full object-cover">
+                    <img src="https://images.unsplash.com/photo-1569154941061-e231b4725ef1?auto=format&fit=crop&w=1200&q=80" class="w-full h-full object-cover">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent flex items-end p-6">
                         <div>
-                            <span class="px-3 py-1 bg-heritage-red text-white text-xs font-semibold rounded-full uppercase">Di tích Quốc gia Đặc biệt</span>
-                            <h1 class="font-serif text-3xl md:text-4xl font-bold text-white mt-2">Địa Đạo Củ Chi</h1>
-                            <p class="text-gray-200 text-sm"><i class="fa-solid fa-location-dot text-heritage-gold mr-2"></i>Huyện Củ Chi, TP.HCM</p>
+                            <span class="px-3 py-1 bg-heritage-red text-white text-xs font-semibold rounded-full uppercase">Di tích Kiến trúc Nghệ thuật</span>
+                            <h1 class="font-serif text-3xl md:text-4xl font-bold text-white mt-2">Bưu Điện Trung Tâm Thành Phố</h1>
+                            <p class="text-gray-200 text-sm"><i class="fa-solid fa-location-dot text-heritage-gold mr-2"></i>2 Công xã Paris, Phường Bến Nghé, Quận 1</p>
                         </div>
                     </div>
                 </div>
@@ -311,14 +308,14 @@
                         <div><h4 class="font-bold">Thuyết Minh Audio</h4><p class="text-xs text-red-200">Nghe hướng dẫn viên ảo giới thiệu</p></div>
                     </div>
                     <div class="flex space-x-2">
-                        <button onclick="speakText('Địa đạo Củ Chi là hệ thống phòng thủ độc đáo trong lòng đất dài hơn 250 ki-lô-mét, minh chứng cho ý chí kiên cường của quân dân Củ Chi.')" class="px-4 py-2 bg-heritage-gold text-heritage-dark font-bold rounded-lg text-sm hover:bg-yellow-400 transition"><i class="fa-solid fa-play mr-1"></i> Phát</button>
+                        <button onclick="speakText('Bưu điện Trung tâm Thành phố Hồ Chí Minh là công trình kiến trúc tiêu biểu kết hợp giữa phong cách phương Tây và phương Đông do kiến trúc sư Gustave Eiffel thiết kế, xây dựng từ năm 1886 đến 1891.')" class="px-4 py-2 bg-heritage-gold text-heritage-dark font-bold rounded-lg text-sm hover:bg-yellow-400 transition"><i class="fa-solid fa-play mr-1"></i> Phát</button>
                         <button onclick="stopSpeech()" class="px-4 py-2 bg-white/20 rounded-lg text-sm hover:bg-white/30 transition"><i class="fa-solid fa-stop mr-1"></i> Dừng</button>
                     </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div class="md:col-span-2 bg-white p-6 rounded-xl shadow-sm space-y-4">
                         <h3 class="font-serif font-bold text-xl text-heritage-red border-b pb-2">Giới Thiệu Lịch Sử</h3>
-                        <p class="text-gray-700 leading-relaxed">Hệ thống đường hầm ngầm lan rộng hơn 250km bao gồm phòng ở, bệnh xá, kho vũ khí và bếp Hoàng Cầu. Đây là công trình quân sự độc đáo khẳng định ý chí quật cường trong kháng chiến.</p>
+                        <p class="text-gray-700 leading-relaxed">Bưu điện Trung tâm TP.HCM được xây dựng từ năm 1886 đến 1891 bởi kiến trúc sư lừng danh Gustave Eiffel. Công trình mang đậm phong cách kiến trúc Phục Hưng kết hợp với các chi tiết trang trí phương Đông độc đáo. Nơi đây không chỉ giữ vai trò bưu chính quan trọng mà còn là điểm đến di sản thu hút hàng triệu du khách ghé thăm mỗi năm.</p>
                         <h4 class="font-bold text-gray-800">Video Tư Liệu:</h4>
                         <div class="aspect-w-16 aspect-h-9 h-64 bg-black rounded-lg overflow-hidden">
                             <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" class="w-full h-full" frameborder="0" allowfullscreen></iframe>
@@ -327,8 +324,8 @@
                     <div class="space-y-4">
                         <div class="bg-white p-4 rounded-xl shadow-sm space-y-3">
                             <h4 class="font-bold text-gray-800 text-sm"><i class="fa-solid fa-map-location-dot text-heritage-red mr-1"></i> Vị Trí Bản Đồ</h4>
-                            <div id="map-dia-dao-cu-chi" class="sub-map-box rounded-lg border"></div>
-                            <a href="https://www.google.com/maps/search/?api=1&query=11.1448,106.4950" target="_blank" class="block text-center py-2 bg-red-800 text-white text-xs font-bold rounded-lg hover:bg-red-900 transition">Mở Google Maps</a>
+                            <div id="map-buu-dien-tp" class="sub-map-box rounded-lg border"></div>
+                            <a href="https://www.google.com/maps/search/?api=1&query=10.7797,106.6997" target="_blank" class="block text-center py-2 bg-red-800 text-white text-xs font-bold rounded-lg hover:bg-red-900 transition">Mở Google Maps</a>
                         </div>
                     </div>
                 </div>
@@ -360,7 +357,7 @@
             if(viewId === 'home') {
                 setTimeout(() => {
                     if(!mainMap) {
-                        mainMap = L.map('mainMap').setView([10.7769, 106.6953], 13);
+                        mainMap = L.map('mainMap').setView([10.7769, 106.6953], 14);
                         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mainMap);
                         
                         const places = [
@@ -368,7 +365,7 @@
                             {name: "Nhà Thờ Đức Bà", lat: 10.7798, lng: 106.6990, id: 'nha-tho-duc-ba'},
                             {name: "Chợ Bến Thành", lat: 10.7725, lng: 106.6980, id: 'cho-ben-thanh'},
                             {name: "Bến Nhà Rồng", lat: 10.7675, lng: 106.7061, id: 'ben-nha-rong'},
-                            {name: "Địa Đạo Củ Chi", lat: 11.1448, lng: 106.4950, id: 'dia-dao-cu-chi'}
+                            {name: "Bưu Điện TP.HCM", lat: 10.7797, lng: 106.6997, id: 'buu-dien-tp'}
                         ];
 
                         places.forEach(p => {
@@ -387,11 +384,11 @@
                         'nha-tho-duc-ba': [10.7798, 106.6990],
                         'cho-ben-thanh': [10.7725, 106.6980],
                         'ben-nha-rong': [10.7675, 106.7061],
-                        'dia-dao-cu-chi': [11.1448, 106.4950]
+                        'buu-dien-tp': [10.7797, 106.6997]
                     };
                     const containerId = 'map-' + viewId;
                     if(!subMaps[viewId] && document.getElementById(containerId)) {
-                        const sm = L.map(containerId).setView(coords[viewId], 15);
+                        const sm = L.map(containerId).setView(coords[viewId], 16);
                         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(sm);
                         L.marker(coords[viewId]).addTo(sm);
                         subMaps[viewId] = sm;
